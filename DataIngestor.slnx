@@ -1,7 +1,12 @@
 <Solution>
-  <Project Path="DataIngestor.Application/DataIngestor.Application.csproj" />
-  <Project Path="DataIngestor.Domain/DataIngestor.Domain.csproj" />
-  <Project Path="DataIngestor.Infrastucture/DataIngestor.Infrastructure.csproj" />
-  <Project Path="DataIngestor.Presentation/DataIngestor.Presentation.csproj" />
-  <Project Path="DataIngestor.AppHost/DataIngestor.AppHost.csproj" />
+  <Folder Name="/src/">
+    <Project Path="src/DataIngestor.AppHost/DataIngestor.AppHost.csproj" />
+    <Project Path="src/DataIngestor.Application/DataIngestor.Application.csproj" />
+    <Project Path="src/DataIngestor.Domain/DataIngestor.Domain.csproj" />
+    <Project Path="src/DataIngestor.Infrastucture/DataIngestor.Infrastructure.csproj" />
+    <Project Path="src/DataIngestor.Presentation/DataIngestor.Presentation.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/DataIngestor.Application.Tests/DataIngestor.Application.Tests.csproj" Id="7e7f5823-6ecd-4702-9763-35f634e8e4fb" />
+  </Folder>
 </Solution>
