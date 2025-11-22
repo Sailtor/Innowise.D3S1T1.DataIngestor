@@ -1,3 +1,7 @@
 <Solution>
-  <Project Path="DataIngestor/DataIngestor.csproj" />
+  <Project Path="DataIngestor.Application/DataIngestor.Application.csproj" />
+  <Project Path="DataIngestor.Domain/DataIngestor.Domain.csproj" />
+  <Project Path="DataIngestor.Infrastucture/DataIngestor.Infrastructure.csproj" />
+  <Project Path="DataIngestor.Presentation/DataIngestor.Presentation.csproj" />
+  <Project Path="DataIngestor/DataIngestor.AppHost.csproj" />
 </Solution>
