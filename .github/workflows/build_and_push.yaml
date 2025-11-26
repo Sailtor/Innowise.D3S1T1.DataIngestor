@@ -5,7 +5,7 @@ on:
       - master
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: Sailtor/innowise.d3s1t1.data_ingestor
+  IMAGE_NAME: sailtor/innowise.d3s1t1.data_ingestor
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
