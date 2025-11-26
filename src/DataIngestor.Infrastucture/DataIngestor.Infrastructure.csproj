@@ -10,4 +10,8 @@
     <Folder Include="Persistence\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DataIngestor.Application\DataIngestor.Application.csproj" />
+  </ItemGroup>
+
 </Project>
