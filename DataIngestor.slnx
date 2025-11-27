@@ -3,7 +3,7 @@
     <Project Path="src/DataIngestor.AppHost/DataIngestor.AppHost.csproj" />
     <Project Path="src/DataIngestor.Application/DataIngestor.Application.csproj" />
     <Project Path="src/DataIngestor.Domain/DataIngestor.Domain.csproj" />
-    <Project Path="src/DataIngestor.Infrastucture/DataIngestor.Infrastructure.csproj" />
+    <Project Path="src/DataIngestor.Infrastructure/DataIngestor.Infrastructure.csproj" />
     <Project Path="src/DataIngestor.Presentation/DataIngestor.Presentation.csproj" />
   </Folder>
   <Folder Name="/tests/">
