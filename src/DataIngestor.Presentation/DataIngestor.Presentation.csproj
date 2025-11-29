@@ -6,9 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DataIngestor.Application\DataIngestor.Application.csproj" />
