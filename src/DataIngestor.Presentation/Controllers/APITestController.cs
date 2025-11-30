@@ -12,7 +12,7 @@ public class APITestController(IMetricReader metricReader) : ControllerBase
     {
         try
         {
-            var readings = await metricReader.ReadMetricsAsync(ct).ConfigureAwait(false);
+            var readings = await metricReader.ReadMetricsAsync(ct);
 
             return Ok(readings);
         }

@@ -32,7 +32,7 @@ public class WeakAPIMetricReader : IMetricReader
         var httpclient = httpClientFactory.CreateClient("WeakAPIClient");
 
         logger.LogInformation("Metrics fetch started");
-        var readings = await httpclient.GetFromJsonAsync<List<MetricReadingBase>>("meters", this.jsonOptions, cancellationToken).ConfigureAwait(false);
+        var readings = await httpclient.GetFromJsonAsync<List<MetricReadingBase>>("meters", jsonOptions, cancellationToken);
         logger.LogInformation("Metrics fetch finished");
 
         return readings ?? [];
