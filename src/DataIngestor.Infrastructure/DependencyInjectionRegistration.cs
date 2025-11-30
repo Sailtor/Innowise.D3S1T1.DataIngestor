@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DataIngestor.Infrastructure;
 
-public static class DependencyInjection
+public static class DependencyInjectionRegistration
 {
     public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
@@ -21,6 +21,7 @@ public static class DependencyInjection
             client.DefaultRequestHeaders.Add("X-Api-Key", configuration.GetSection("Integrations:WeakAPI:ApiKey").Value);
         });
     }
+
     private static void AddAppServices(IServiceCollection services)
     {
         services.AddScoped<IMetricReader, WeakAPIMetricReader>();

@@ -7,7 +7,6 @@ namespace DataIngestor.Presentation.Controllers;
 [Route("api/test")]
 public class APITestController(IMetricReader metricReader) : ControllerBase
 {
-
     [HttpGet("readings")]
     public async Task<IActionResult> GetReadings(CancellationToken ct)
     {
@@ -21,8 +20,7 @@ public class APITestController(IMetricReader metricReader) : ControllerBase
         {
             return Problem(
                 detail: ex.Message,
-                title: "Failed to fetch from WeakApi"
-            );
+                title: "Failed to fetch from WeakApi");
         }
     }
 }
