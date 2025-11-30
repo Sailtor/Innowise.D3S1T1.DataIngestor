@@ -1,6 +1,9 @@
-﻿using DataIngestor.Domain.Entities.Payload;
-using DataIngestor.Domain.ValueObjects;
+﻿// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
 using System.Text.Json.Serialization;
+using DataIngestor.Domain.Entities.Payload;
+using DataIngestor.Domain.ValueObjects;
 
 namespace DataIngestor.Domain.Entities;
 

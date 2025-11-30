@@ -1,9 +1,12 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DataIngestor.Presentation;
 
-public static class DependencyInjection
+public static class DependencyInjectionRegistration
 {
     public static void AddPresentationServices(this IServiceCollection services, IConfiguration configuration)
     {
