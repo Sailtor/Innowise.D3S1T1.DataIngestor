@@ -3,15 +3,17 @@ on:
   push:
     branches:
       - master
+
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: sailtor/innowise.d3s1t1.data_ingestor
+
 jobs:
   codestyle-check:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
@@ -20,6 +22,7 @@ jobs:
       run: dotnet restore ./DataIngestor.slnx
     - name: Format
       run: dotnet format ./DataIngestor.slnx --verify-no-changes --verbosity diagnostic --no-restore
+
   build-and-push:
     needs: codestyle-check
     if: github.event_name == 'push'
@@ -29,9 +32,7 @@ jobs:
       packages: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v6
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
