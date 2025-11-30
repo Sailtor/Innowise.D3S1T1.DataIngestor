@@ -1,7 +1,4 @@
-﻿// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DataIngestor.Presentation;

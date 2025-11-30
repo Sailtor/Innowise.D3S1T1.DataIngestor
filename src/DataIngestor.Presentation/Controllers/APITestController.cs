@@ -11,11 +11,11 @@ namespace DataIngestor.Presentation.Controllers;
 public class APITestController(IMetricReader metricReader) : ControllerBase
 {
     [HttpGet("readings")]
-    public async Task<IActionResult> GetReadings(CancellationToken ct)
+    public async Task<IActionResult> GetReadings(CancellationToken cancellationToken)
     {
         try
         {
-            var readings = await metricReader.ReadMetricsAsync(ct);
+            var readings = await metricReader.ReadMetricsAsync(cancellationToken);
 
             return Ok(readings);
         }
