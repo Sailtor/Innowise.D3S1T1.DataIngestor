@@ -1,7 +1,7 @@
 using AutoMapper;
 using DataIngestor.Application.Interfaces;
+using DataIngestor.Contracts;
 using DataIngestor.Domain.Entities;
-using DataIngestor.Domain.Messages;
 using MassTransit;
 
 namespace DataIngestor.Infrastructure.Messaging;

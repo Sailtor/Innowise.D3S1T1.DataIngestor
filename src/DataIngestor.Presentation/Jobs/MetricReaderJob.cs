@@ -1,6 +1,4 @@
-﻿using System.Text.Json;
 using DataIngestor.Application.Interfaces;
-using DataIngestor.Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Quartz;
@@ -17,22 +15,15 @@ public class MetricReaderJob(
     public async Task Execute(IJobExecutionContext context)
     {
         await using AsyncServiceScope scope = scopeFactory.CreateAsyncScope();
-        IMetricReader metricReader = scope.ServiceProvider.GetRequiredService<IMetricReader>();
+        IMetricsIngestionService ingestionService = scope.ServiceProvider.GetRequiredService<IMetricsIngestionService>();
 
-        logger.LogInformation($"Metrics fetch started at {DateTime.UtcNow}");
         try
         {
-            IMetricPublisher metricPublisher = scope.ServiceProvider.GetRequiredService<IMetricPublisher>();
-
-            List<MetricReadingBase> metrics = await metricReader.ReadMetricsAsync();
-            logger.LogInformation("Fetched {Count} metrics: {Payload}", metrics.Count, JsonSerializer.Serialize(metrics));
-
-            await metricPublisher.PublishAsync(metrics);
-            logger.LogInformation("Published batch of {Count} metrics to message queue", metrics.Count);
+            await ingestionService.IngestAsync();
         }
         catch (Exception ex)
         {
-            logger.LogWarning(ex, "Metrics fetch/publish failed. Will retry on next trigger.");
+            logger.LogWarning(ex, "Metrics ingestion failed. Will retry on next trigger.");
         }
     }
 }

@@ -7,7 +7,7 @@ namespace DataIngestor.Presentation;
 
 public static class DependencyInjectionRegistration
 {
-    public static void AddPresentationServices(this IServiceCollection services, IConfiguration configuration)
+    public static void AddPresentation(this IServiceCollection services, IConfiguration configuration)
     {
         AddControllers(services);
         AddQuartzJobs(services, configuration);

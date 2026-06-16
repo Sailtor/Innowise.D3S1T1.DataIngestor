@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DataIngestor.Application\DataIngestor.Application.csproj" />
+    <ProjectReference Include="..\DataIngestor.Contracts\DataIngestor.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

@@ -4,11 +4,14 @@
     <File Path="Directory.Build.props" />
     <Project Path="src/DataIngestor.AppHost/DataIngestor.AppHost.csproj" />
     <Project Path="src/DataIngestor.Application/DataIngestor.Application.csproj" />
+    <Project Path="src/DataIngestor.Contracts/DataIngestor.Contracts.csproj" Id="28db426c-36eb-4ef3-85bb-a653ba2a8e0e" />
     <Project Path="src/DataIngestor.Domain/DataIngestor.Domain.csproj" />
     <Project Path="src/DataIngestor.Infrastructure/DataIngestor.Infrastructure.csproj" />
     <Project Path="src/DataIngestor.Presentation/DataIngestor.Presentation.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/DataIngestor.Application.Tests/DataIngestor.Application.Tests.csproj" Id="7e7f5823-6ecd-4702-9763-35f634e8e4fb" />
+    <Project Path="tests/DataIngestor.Infrastructure.Tests/DataIngestor.Infrastructure.Tests.csproj" Id="93db3dee-3067-4552-83e2-3472b61b5d93" />
+    <Project Path="tests/DataIngestor.Presentation.Tests/DataIngestor.Presentation.Tests.csproj" Id="e897336e-ac94-417a-88e0-d49bd202b2e4" />
   </Folder>
 </Solution>

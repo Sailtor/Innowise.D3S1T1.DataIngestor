@@ -2,7 +2,7 @@
 
 namespace DataIngestor.Domain.Entities.Payload;
 
-internal class AirQualityReadingPayload
+public class AirQualityReadingPayload
 {
     [JsonPropertyName("co2")]
     public double Co2 { get; set; }
