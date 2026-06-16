@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using DataIngestor.Application.Interfaces;
+using DataIngestor.Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Quartz;
@@ -15,15 +16,15 @@ public class MetricReaderJob(
 
     public async Task Execute(IJobExecutionContext context)
     {
-        await using var scope = scopeFactory.CreateAsyncScope();
-        var metricReader = scope.ServiceProvider.GetRequiredService<IMetricReader>();
+        await using AsyncServiceScope scope = scopeFactory.CreateAsyncScope();
+        IMetricReader metricReader = scope.ServiceProvider.GetRequiredService<IMetricReader>();
 
         logger.LogInformation($"Metrics fetch started at {DateTime.UtcNow}");
         try
         {
-            var metricPublisher = scope.ServiceProvider.GetRequiredService<IMetricPublisher>();
+            IMetricPublisher metricPublisher = scope.ServiceProvider.GetRequiredService<IMetricPublisher>();
 
-            var metrics = await metricReader.ReadMetricsAsync();
+            List<MetricReadingBase> metrics = await metricReader.ReadMetricsAsync();
             logger.LogInformation("Fetched {Count} metrics: {Payload}", metrics.Count, JsonSerializer.Serialize(metrics));
 
             await metricPublisher.PublishAsync(metrics);

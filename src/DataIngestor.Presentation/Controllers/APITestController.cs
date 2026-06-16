@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using DataIngestor.Application.Interfaces;
+using DataIngestor.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Polly.CircuitBreaker;
@@ -15,7 +16,7 @@ public class APITestController(IMetricReader metricReader) : ControllerBase
     {
         try
         {
-            var readings = await metricReader.ReadMetricsAsync(cancellationToken);
+            List<MetricReadingBase> readings = await metricReader.ReadMetricsAsync(cancellationToken);
 
             return Ok(readings);
         }

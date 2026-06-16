@@ -14,5 +14,8 @@ public record Location
 
     public string Name { get; }
 
-    public override string ToString() => Name;
+    public override string ToString()
+    {
+        return Name;
+    }
 }

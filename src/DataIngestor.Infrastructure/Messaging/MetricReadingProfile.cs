@@ -11,7 +11,7 @@ public class MetricReadingProfile : Profile
 {
     private static readonly JsonSerializerOptions SerializerOptions = new()
     {
-        Converters = { new LocationJsonConverter() }
+        Converters = { new LocationJsonConverter() },
     };
 
     public MetricReadingProfile()
@@ -24,13 +24,13 @@ public class MetricReadingProfile : Profile
 
     private static string GetType(MetricReadingBase src)
     {
-        var node = JsonSerializer.SerializeToNode(src, SerializerOptions);
+        JsonNode? node = JsonSerializer.SerializeToNode(src, SerializerOptions);
         return node?.AsObject()["type"]?.GetValue<string>() ?? "unknown";
     }
 
     private static object GetPayload(MetricReadingBase src)
     {
-        var node = JsonSerializer.SerializeToNode(src, SerializerOptions);
-        return (object)(node?.AsObject()["payload"] ?? new JsonObject());
+        JsonNode? node = JsonSerializer.SerializeToNode(src, SerializerOptions);
+        return node?.AsObject()["payload"] ?? new JsonObject();
     }
 }

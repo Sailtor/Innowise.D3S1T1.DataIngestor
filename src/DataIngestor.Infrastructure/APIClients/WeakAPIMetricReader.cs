@@ -11,7 +11,7 @@ public class WeakAPIMetricReader : IMetricReader
 {
     private readonly IHttpClientFactory httpClientFactory;
     private readonly ILogger<WeakAPIMetricReader> logger;
-    private JsonSerializerOptions jsonOptions;
+    private readonly JsonSerializerOptions jsonOptions;
 
     public WeakAPIMetricReader(
         IHttpClientFactory httpClientFactory,
@@ -29,10 +29,10 @@ public class WeakAPIMetricReader : IMetricReader
 
     public async Task<List<MetricReadingBase>> ReadMetricsAsync(CancellationToken cancellationToken = default)
     {
-        var httpclient = httpClientFactory.CreateClient("WeakAPIClient");
+        HttpClient httpclient = httpClientFactory.CreateClient("WeakAPIClient");
 
         logger.LogInformation("Metrics fetch started");
-        var readings = await httpclient.GetFromJsonAsync<List<MetricReadingBase>>("meters", jsonOptions, cancellationToken);
+        List<MetricReadingBase>? readings = await httpclient.GetFromJsonAsync<List<MetricReadingBase>>("meters", jsonOptions, cancellationToken);
         logger.LogInformation("Metrics fetch finished");
 
         return readings ?? [];

@@ -8,7 +8,7 @@ public class LocationJsonConverter : JsonConverter<Location>
 {
     public override Location? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        var name = reader.GetString();
+        string? name = reader.GetString();
         return name == null ? null : new Location(name);
     }
 

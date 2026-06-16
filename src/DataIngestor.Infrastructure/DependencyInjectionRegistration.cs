@@ -1,13 +1,12 @@
-﻿using AutoMapper;
-using DataIngestor.Application.Interfaces;
+﻿using DataIngestor.Application.Interfaces;
 using DataIngestor.Domain.Messages;
 using DataIngestor.Infrastructure.APIClients;
 using DataIngestor.Infrastructure.Messaging;
 using MassTransit;
-using RabbitMQ.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
+using RabbitMQ.Client;
 
 namespace DataIngestor.Infrastructure;
 

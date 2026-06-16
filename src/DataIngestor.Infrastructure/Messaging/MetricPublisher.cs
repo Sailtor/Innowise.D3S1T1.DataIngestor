@@ -13,8 +13,8 @@ public class MetricPublisher(IPublishEndpoint publishEndpoint, IMapper mapper) :
 
     public async Task PublishAsync(IReadOnlyList<MetricReadingBase> readings, CancellationToken cancellationToken = default)
     {
-        var messages = mapper.Map<List<MetricReadingMessage>>(readings);
-        var batch = new MetricReadingsBatch(messages, DateTime.UtcNow);
+        List<MetricReadingMessage> messages = mapper.Map<List<MetricReadingMessage>>(readings);
+        MetricReadingsBatch batch = new(messages, DateTime.UtcNow);
         await publishEndpoint.Publish(batch, cancellationToken);
     }
 }
