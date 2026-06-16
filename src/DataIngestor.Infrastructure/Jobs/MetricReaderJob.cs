@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Quartz;
 
-namespace DataIngestor.Presentation.Jobs;
+namespace DataIngestor.Infrastructure.Jobs;
 
 public class MetricReaderJob(
     IServiceScopeFactory scopeFactory,

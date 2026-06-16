@@ -11,7 +11,7 @@ public class WeakAPIMetricReader(
     HttpClient httpClient,
     ILogger<WeakAPIMetricReader> logger) : IMetricReader
 {
-    private readonly JsonSerializerOptions jsonOptions = new()
+    private static readonly JsonSerializerOptions jsonOptions = new()
     {
         PropertyNameCaseInsensitive = true,
         Converters = { new LocationJsonConverter() },

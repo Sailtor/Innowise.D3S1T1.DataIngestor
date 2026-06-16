@@ -32,12 +32,12 @@ public class MetricsIngestionServiceTests
             new MetricReading<EnergyReadingPayload>
             {
                 Location = new Location("Room-A"),
-                Payload = new EnergyReadingPayload { Amount = 42.5 },
+                Payload = new EnergyReadingPayload(42.5),
             },
             new MetricReading<MotionReadingPayload>
             {
                 Location = new Location("Hallway"),
-                Payload = new MotionReadingPayload { IsDetected = true },
+                Payload = new MotionReadingPayload(true),
             },
         ];
 

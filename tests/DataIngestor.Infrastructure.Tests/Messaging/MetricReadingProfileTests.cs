@@ -27,7 +27,7 @@ public class MetricReadingProfileTests
         MetricReadingBase reading = new MetricReading<EnergyReadingPayload>
         {
             Location = new Location("Room-A"),
-            Payload = new EnergyReadingPayload { Amount = 10.0 },
+            Payload = new EnergyReadingPayload(10.0),
         };
 
         // Act
@@ -44,7 +44,7 @@ public class MetricReadingProfileTests
         MetricReadingBase reading = new MetricReading<MotionReadingPayload>
         {
             Location = new Location("Hallway"),
-            Payload = new MotionReadingPayload { IsDetected = true },
+            Payload = new MotionReadingPayload(true),
         };
 
         // Act
@@ -61,7 +61,7 @@ public class MetricReadingProfileTests
         MetricReadingBase reading = new MetricReading<EnergyReadingPayload>
         {
             Location = new Location("Office"),
-            Payload = new EnergyReadingPayload { Amount = 5.0 },
+            Payload = new EnergyReadingPayload(5.0),
         };
 
         // Act
@@ -78,7 +78,7 @@ public class MetricReadingProfileTests
         MetricReadingBase reading = new MetricReading<EnergyReadingPayload>
         {
             Location = new Location("Room-B"),
-            Payload = new EnergyReadingPayload { Amount = 99.9 },
+            Payload = new EnergyReadingPayload(99.9),
         };
 
         // Act
@@ -98,12 +98,12 @@ public class MetricReadingProfileTests
             new MetricReading<EnergyReadingPayload>
             {
                 Location = new Location("Room-A"),
-                Payload = new EnergyReadingPayload { Amount = 1.0 },
+                Payload = new EnergyReadingPayload(1.0),
             },
             new MetricReading<MotionReadingPayload>
             {
                 Location = new Location("Hallway"),
-                Payload = new MotionReadingPayload { IsDetected = false },
+                Payload = new MotionReadingPayload(false),
             },
         ];
 

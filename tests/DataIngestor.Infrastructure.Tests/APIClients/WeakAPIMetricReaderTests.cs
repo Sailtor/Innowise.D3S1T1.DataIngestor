@@ -36,7 +36,7 @@ public class WeakAPIMetricReaderTests
             new MetricReading<EnergyReadingPayload>
             {
                 Location = new Location("Room-A"),
-                Payload = new EnergyReadingPayload { Amount = 42.5 },
+                Payload = new EnergyReadingPayload(42.5),
             },
         ];
 

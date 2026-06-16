@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\DataIngestor.Infrastructure\DataIngestor.Infrastructure.csproj" />
     <ProjectReference Include="..\..\src\DataIngestor.Presentation\DataIngestor.Presentation.csproj" />
   </ItemGroup>
 

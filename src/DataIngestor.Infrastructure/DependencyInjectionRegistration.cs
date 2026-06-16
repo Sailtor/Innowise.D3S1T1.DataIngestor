@@ -1,6 +1,7 @@
 using DataIngestor.Application.Interfaces;
 using DataIngestor.Contracts;
 using DataIngestor.Infrastructure.APIClients;
+using DataIngestor.Infrastructure.Jobs;
 using DataIngestor.Infrastructure.Messaging;
 using DataIngestor.Infrastructure.Options;
 using MassTransit;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Http.Resilience;
 using Microsoft.Extensions.Options;
+using Quartz;
 using RabbitMQ.Client;
 
 namespace DataIngestor.Infrastructure;
@@ -19,6 +21,7 @@ public static class DependencyInjectionRegistration
         AddHttpClients(services, configuration);
         AddAppServices(services);
         AddMessaging(services, configuration);
+        AddScheduledJobs(services, configuration);
     }
 
     private static void AddHttpClients(IServiceCollection services, IConfiguration configuration)
@@ -44,6 +47,39 @@ public static class DependencyInjectionRegistration
     {
         services.AddScoped<IMetricPublisher, MetricPublisher>();
         services.AddAutoMapper(AssemblyReference.Assembly);
+    }
+
+    private static void AddScheduledJobs(IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<QuartzOptions>(configuration.GetSection("Quartz"));
+        services.Configure<QuartzOptions>(options =>
+        {
+            options.Scheduling.IgnoreDuplicates = true;
+            options.Scheduling.OverWriteExistingData = false;
+        });
+
+        services.AddQuartz(q =>
+        {
+            q.SchedulerId = "Scheduler-Core";
+            q.UseSimpleTypeLoader();
+            q.UseInMemoryStore();
+            q.UseDefaultThreadPool(tp =>
+            {
+                tp.MaxConcurrency = 10;
+            });
+
+            q.ScheduleJob<MetricReaderJob>(trigger => trigger
+                .WithIdentity("10 second cron Trigger")
+                .StartNow()
+                .WithCronSchedule("0/10 * * * * ?")
+                .WithDescription("10 second cron trigger")
+            );
+        });
+
+        services.AddQuartzHostedService(options =>
+        {
+            options.WaitForJobsToComplete = true;
+        });
     }
 
     private static void AddMessaging(IServiceCollection services, IConfiguration configuration)

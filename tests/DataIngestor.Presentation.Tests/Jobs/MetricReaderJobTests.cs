@@ -1,5 +1,5 @@
 using DataIngestor.Application.Interfaces;
-using DataIngestor.Presentation.Jobs;
+using DataIngestor.Infrastructure.Jobs;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NSubstitute;

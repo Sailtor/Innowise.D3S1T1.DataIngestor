@@ -14,7 +14,7 @@ public class MetricPublisher(IPublishEndpoint publishEndpoint, IMapper mapper) :
     public async Task PublishAsync(IReadOnlyList<MetricReadingBase> readings, CancellationToken cancellationToken = default)
     {
         List<MetricReadingMessage> messages = mapper.Map<List<MetricReadingMessage>>(readings);
-        MetricReadingsBatch batch = new(messages, DateTime.UtcNow);
+        MetricReadingsBatch batch = new(messages, IngestedAtUtc: DateTime.UtcNow);
         await publishEndpoint.Publish(batch, cancellationToken);
     }
 }

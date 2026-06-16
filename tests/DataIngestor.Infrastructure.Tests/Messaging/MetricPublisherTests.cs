@@ -31,7 +31,7 @@ public class MetricPublisherTests
             new MetricReading<EnergyReadingPayload>
             {
                 Location = new Location("Room-A"),
-                Payload = new EnergyReadingPayload { Amount = 42.0 },
+                Payload = new EnergyReadingPayload(42.0),
             },
         ];
 
@@ -52,12 +52,12 @@ public class MetricPublisherTests
             new MetricReading<EnergyReadingPayload>
             {
                 Location = new Location("Room-A"),
-                Payload = new EnergyReadingPayload { Amount = 1.0 },
+                Payload = new EnergyReadingPayload(1.0),
             },
             new MetricReading<MotionReadingPayload>
             {
                 Location = new Location("Hallway"),
-                Payload = new MotionReadingPayload { IsDetected = true },
+                Payload = new MotionReadingPayload(true),
             },
         ];
 
@@ -80,7 +80,7 @@ public class MetricPublisherTests
             new MetricReading<EnergyReadingPayload>
             {
                 Location = new Location("Room-A"),
-                Payload = new EnergyReadingPayload { Amount = 1.0 },
+                Payload = new EnergyReadingPayload(1.0),
             },
         ];
 
@@ -94,7 +94,7 @@ public class MetricPublisherTests
         // Assert
         await publishEndpoint.Received(1)
             .Publish(
-                Arg.Is<Contracts.MetricReadingsBatch>(b => b.IngestedAt >= before && b.IngestedAt <= after),
+                Arg.Is<Contracts.MetricReadingsBatch>(b => b.IngestedAtUtc >= before && b.IngestedAtUtc <= after),
                 Arg.Any<CancellationToken>());
     }
 
@@ -108,7 +108,7 @@ public class MetricPublisherTests
             new MetricReading<EnergyReadingPayload>
             {
                 Location = new Location("Room-A"),
-                Payload = new EnergyReadingPayload { Amount = 1.0 },
+                Payload = new EnergyReadingPayload(1.0),
             },
         ];
 

@@ -2,14 +2,7 @@
 
 namespace DataIngestor.Domain.Entities.Payload;
 
-public class AirQualityReadingPayload
-{
-    [JsonPropertyName("co2")]
-    public double Co2 { get; set; }
-
-    [JsonPropertyName("pm25")]
-    public double Pm25 { get; set; }
-
-    [JsonPropertyName("humidity")]
-    public double Humidity { get; set; }
-}
+public record AirQualityReadingPayload(
+    [property: JsonPropertyName("co2")] double Co2,
+    [property: JsonPropertyName("pm25")] double Pm25,
+    [property: JsonPropertyName("humidity")] double Humidity);
