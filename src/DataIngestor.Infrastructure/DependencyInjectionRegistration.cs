@@ -1,5 +1,10 @@
-﻿using DataIngestor.Application.Interfaces;
+﻿using AutoMapper;
+using DataIngestor.Application.Interfaces;
+using DataIngestor.Domain.Messages;
 using DataIngestor.Infrastructure.APIClients;
+using DataIngestor.Infrastructure.Messaging;
+using MassTransit;
+using RabbitMQ.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
@@ -12,6 +17,7 @@ public static class DependencyInjectionRegistration
     {
         AddHttpClients(services, configuration);
         AddAppServices(services);
+        AddMessaging(services, configuration);
     }
 
     private static void AddHttpClients(IServiceCollection services, IConfiguration configuration)
@@ -41,5 +47,25 @@ public static class DependencyInjectionRegistration
     private static void AddAppServices(IServiceCollection services)
     {
         services.AddScoped<IMetricReader, WeakAPIMetricReader>();
+        services.AddScoped<IMetricPublisher, MetricPublisher>();
+        services.AddAutoMapper(typeof(MetricReadingProfile));
+    }
+
+    private static void AddMessaging(IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddMassTransit(x =>
+        {
+            x.UsingRabbitMq((ctx, cfg) =>
+            {
+                cfg.Host(configuration.GetSection("RabbitMQ:Host").Value, configuration.GetSection("RabbitMQ:VirtualHost").Value, h =>
+                {
+                    h.Username(configuration.GetSection("RabbitMQ:Username").Value!);
+                    h.Password(configuration.GetSection("RabbitMQ:Password").Value!);
+                });
+
+                cfg.Message<MetricReadingsBatch>(x => x.SetEntityName("metric-readings"));
+                cfg.Publish<MetricReadingsBatch>(x => x.ExchangeType = ExchangeType.Fanout);
+            });
+        });
     }
 }

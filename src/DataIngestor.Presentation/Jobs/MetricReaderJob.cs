@@ -21,12 +21,17 @@ public class MetricReaderJob(
         logger.LogInformation($"Metrics fetch started at {DateTime.UtcNow}");
         try
         {
+            var metricPublisher = scope.ServiceProvider.GetRequiredService<IMetricPublisher>();
+
             var metrics = await metricReader.ReadMetricsAsync();
-            logger.LogInformation("Fetched {Count} metrics: {Payload}", metrics.Count, JsonSerializer.Serialize(metrics)); // To test metrics reading. Will be switched to MQ message posting
+            logger.LogInformation("Fetched {Count} metrics: {Payload}", metrics.Count, JsonSerializer.Serialize(metrics));
+
+            await metricPublisher.PublishAsync(metrics);
+            logger.LogInformation("Published batch of {Count} metrics to message queue", metrics.Count);
         }
         catch (Exception ex)
         {
-            logger.LogWarning(ex, "Metrics fetch failed. Will retry on next trigger.");
+            logger.LogWarning(ex, "Metrics fetch/publish failed. Will retry on next trigger.");
         }
     }
 }
