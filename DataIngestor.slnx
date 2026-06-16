@@ -1,9 +1,7 @@
 <Solution>
-  <Folder Name="/Solution Items/">
+  <Folder Name="/src/">
     <File Path=".editorconfig" />
     <File Path="Directory.Build.props" />
-  </Folder>
-  <Folder Name="/src/">
     <Project Path="src/DataIngestor.AppHost/DataIngestor.AppHost.csproj" />
     <Project Path="src/DataIngestor.Application/DataIngestor.Application.csproj" />
     <Project Path="src/DataIngestor.Domain/DataIngestor.Domain.csproj" />

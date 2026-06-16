@@ -2,11 +2,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Quartz;
-using Quartz.Impl.Calendar;
-using Quartz.Impl.Matchers;
-using System.Diagnostics.Metrics;
-using System.Globalization;
-using System.Security.Principal;
 
 namespace DataIngestor.Presentation;
 
@@ -34,7 +29,6 @@ public static class DependencyInjectionRegistration
 
         services.AddQuartz(q =>
         {
-            // handy when part of cluster or you want to otherwise identify multiple schedulers
             q.SchedulerId = "Scheduler-Core";
             q.UseSimpleTypeLoader();
             q.UseInMemoryStore();
@@ -43,13 +37,17 @@ public static class DependencyInjectionRegistration
                 tp.MaxConcurrency = 10;
             });
 
-            // quickest way to create a job with single trigger is to use ScheduleJob
             q.ScheduleJob<MetricReaderJob>(trigger => trigger
                 .WithIdentity("10 second cron Trigger")
                 .StartNow()
-                .WithCronSchedule("0/3 * * * * ?")
+                .WithCronSchedule("0/10 * * * * ?")
                 .WithDescription("10 second cron trigger")
             );
+        });
+
+        services.AddQuartzHostedService(options =>
+        {
+            options.WaitForJobsToComplete = true;
         });
     }
 }
