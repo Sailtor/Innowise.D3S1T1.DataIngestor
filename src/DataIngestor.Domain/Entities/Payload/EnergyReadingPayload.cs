@@ -2,8 +2,5 @@
 
 namespace DataIngestor.Domain.Entities.Payload;
 
-public class EnergyReadingPayload
-{
-    [JsonPropertyName("energy")]
-    public double Amount { get; set; }
-}
+public record EnergyReadingPayload(
+    [property: JsonPropertyName("energy")] double Amount);

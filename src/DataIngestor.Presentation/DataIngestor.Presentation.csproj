@@ -10,13 +10,9 @@
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="10.0.0" />
-	  <PackageReference Include="Polly.Core" Version="8.6.5" />
-	</ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\DataIngestor.Application\DataIngestor.Application.csproj" />
+    <ProjectReference Include="..\DataIngestor.Infrastructure\DataIngestor.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

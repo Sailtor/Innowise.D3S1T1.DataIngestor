@@ -1,13 +1,14 @@
+using DataIngestor.Application;
 using DataIngestor.Infrastructure;
 using DataIngestor.Presentation;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
-builder.Services.AddInfrastructureServices(builder.Configuration);
-builder.Services.AddPresentationServices(builder.Configuration);
+builder.Services.AddApplication(builder.Configuration);
+builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddPresentation(builder.Configuration);
 
 var app = builder.Build();
 

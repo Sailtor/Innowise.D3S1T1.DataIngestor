@@ -1,45 +1,108 @@
-﻿using DataIngestor.Application.Interfaces;
+using DataIngestor.Application.Interfaces;
+using DataIngestor.Contracts;
 using DataIngestor.Infrastructure.APIClients;
+using DataIngestor.Infrastructure.Jobs;
+using DataIngestor.Infrastructure.Messaging;
+using DataIngestor.Infrastructure.Options;
+using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Polly;
+using Microsoft.Extensions.Http.Resilience;
+using Microsoft.Extensions.Options;
+using Quartz;
+using RabbitMQ.Client;
 
 namespace DataIngestor.Infrastructure;
 
 public static class DependencyInjectionRegistration
 {
-    public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
+    public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         AddHttpClients(services, configuration);
         AddAppServices(services);
+        AddMessaging(services, configuration);
+        AddScheduledJobs(services, configuration);
     }
 
     private static void AddHttpClients(IServiceCollection services, IConfiguration configuration)
     {
-        services.AddHttpClient("WeakAPIClient", client =>
+        services.Configure<WeakApiOptions>(configuration.GetSection(WeakApiOptions.SectionName));
+
+        services.AddHttpClient<IMetricReader, WeakAPIMetricReader>((serviceProvider, client) =>
         {
-            client.BaseAddress = new Uri(configuration.GetSection("Integrations:WeakAPI:URL").Value);
-            client.DefaultRequestHeaders.Add("X-Api-Key", configuration.GetSection("Integrations:WeakAPI:ApiKey").Value);
-        }).AddStandardResilienceHandler(options =>
-        {
-            options.TotalRequestTimeout.Timeout = TimeSpan.FromSeconds(30);
+            WeakApiOptions options = serviceProvider
+                .GetRequiredService<IOptions<WeakApiOptions>>()
+                .Value;
 
-            options.Retry.MaxRetryAttempts = 5;
-            options.Retry.BackoffType = DelayBackoffType.Exponential;
-            options.Retry.UseJitter = true;
-            options.Retry.Delay = TimeSpan.FromSeconds(2);
+            client.BaseAddress = new Uri(options.Url);
+            client.DefaultRequestHeaders.Add("X-Api-Key", options.ApiKey);
+        }).AddStandardResilienceHandler();
 
-            options.CircuitBreaker.SamplingDuration = TimeSpan.FromSeconds(30);
-            options.CircuitBreaker.FailureRatio = 0.5;
-            options.CircuitBreaker.MinimumThroughput = 5;
-            options.CircuitBreaker.BreakDuration = TimeSpan.FromSeconds(15);
-
-            options.AttemptTimeout.Timeout = TimeSpan.FromSeconds(3);
-        });
+        string resilienceOptionsName = $"{typeof(IMetricReader).FullName}-standard";
+        services.AddOptions<HttpStandardResilienceOptions>(resilienceOptionsName)
+            .Bind(configuration.GetSection(WeakApiOptions.ResilienceSectionName));
     }
 
     private static void AddAppServices(IServiceCollection services)
     {
-        services.AddScoped<IMetricReader, WeakAPIMetricReader>();
+        services.AddScoped<IMetricPublisher, MetricPublisher>();
+        services.AddAutoMapper(AssemblyReference.Assembly);
+    }
+
+    private static void AddScheduledJobs(IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<QuartzOptions>(configuration.GetSection("Quartz"));
+        services.Configure<QuartzOptions>(options =>
+        {
+            options.Scheduling.IgnoreDuplicates = true;
+            options.Scheduling.OverWriteExistingData = false;
+        });
+
+        services.AddQuartz(q =>
+        {
+            q.SchedulerId = "Scheduler-Core";
+            q.UseSimpleTypeLoader();
+            q.UseInMemoryStore();
+            q.UseDefaultThreadPool(tp =>
+            {
+                tp.MaxConcurrency = 10;
+            });
+
+            q.ScheduleJob<MetricReaderJob>(trigger => trigger
+                .WithIdentity("10 second cron Trigger")
+                .StartNow()
+                .WithCronSchedule("0/10 * * * * ?")
+                .WithDescription("10 second cron trigger")
+            );
+        });
+
+        services.AddQuartzHostedService(options =>
+        {
+            options.WaitForJobsToComplete = true;
+        });
+    }
+
+    private static void AddMessaging(IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<RabbitMqOptions>(configuration.GetSection(RabbitMqOptions.SectionName));
+
+        services.AddMassTransit(x =>
+        {
+            x.UsingRabbitMq((ctx, cfg) =>
+            {
+                RabbitMqOptions options = ctx
+                    .GetRequiredService<IOptions<RabbitMqOptions>>()
+                    .Value;
+
+                cfg.Host(options.Host, options.VirtualHost, h =>
+                {
+                    h.Username(options.Username);
+                    h.Password(options.Password);
+                });
+
+                cfg.Message<MetricReadingsBatch>(x => x.SetEntityName("metric-readings"));
+                cfg.Publish<MetricReadingsBatch>(x => x.ExchangeType = ExchangeType.Fanout);
+            });
+        });
     }
 }

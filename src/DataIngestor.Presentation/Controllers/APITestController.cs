@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using DataIngestor.Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,16 +8,16 @@ namespace DataIngestor.Presentation.Controllers;
 
 [ApiController]
 [Route("api/test")]
-public class APITestController(IMetricReader metricReader) : ControllerBase
+public class APITestController(IMetricsIngestionService ingestionService) : ControllerBase
 {
     [HttpGet("readings")]
     public async Task<IActionResult> GetReadings(CancellationToken cancellationToken)
     {
         try
         {
-            var readings = await metricReader.ReadMetricsAsync(cancellationToken);
+            await ingestionService.IngestAsync(cancellationToken);
 
-            return Ok(readings);
+            return Ok();
         }
         catch (BrokenCircuitException ex)
         {
