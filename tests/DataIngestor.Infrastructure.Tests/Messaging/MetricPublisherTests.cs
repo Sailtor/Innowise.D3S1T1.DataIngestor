@@ -4,6 +4,7 @@ using DataIngestor.Domain.Entities.Payload;
 using DataIngestor.Domain.ValueObjects;
 using DataIngestor.Infrastructure.Messaging;
 using MassTransit;
+using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 
 namespace DataIngestor.Infrastructure.Tests.Messaging;
@@ -11,9 +12,14 @@ namespace DataIngestor.Infrastructure.Tests.Messaging;
 public class MetricPublisherTests
 {
     private readonly IPublishEndpoint publishEndpoint = Substitute.For<IPublishEndpoint>();
-    private readonly IMapper mapper = new MapperConfiguration(
-        cfg => cfg.AddProfile<MetricReadingProfile>())
-        .CreateMapper();
+    private readonly IMapper mapper = CreateMapper();
+
+    private static IMapper CreateMapper()
+    {
+        MapperConfigurationExpression expression = new();
+        expression.AddProfile<MetricReadingProfile>();
+        return new MapperConfiguration(expression, NullLoggerFactory.Instance).CreateMapper();
+    }
 
     private readonly MetricPublisher sut;
 
