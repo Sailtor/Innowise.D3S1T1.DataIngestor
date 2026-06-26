@@ -45,7 +45,7 @@ public class MetricsIngestionServiceTests
             .Returns(readings);
 
         // Act
-        await sut.IngestAsync();
+        await sut.IngestAsync(TestContext.Current.CancellationToken);
 
         // Assert
         await metricPublisher.Received(1)
@@ -62,7 +62,7 @@ public class MetricsIngestionServiceTests
             .Returns([]);
 
         // Act
-        await sut.IngestAsync();
+        await sut.IngestAsync(TestContext.Current.CancellationToken);
 
         // Assert
         await metricPublisher.Received(1)
@@ -79,7 +79,7 @@ public class MetricsIngestionServiceTests
             .Returns([]);
 
         // Act
-        await sut.IngestAsync();
+        await sut.IngestAsync(TestContext.Current.CancellationToken);
 
         // Assert
         await metricReader.Received(1).ReadMetricsAsync(Arg.Any<CancellationToken>());
@@ -93,7 +93,7 @@ public class MetricsIngestionServiceTests
             .Returns([]);
 
         // Act
-        await sut.IngestAsync();
+        await sut.IngestAsync(TestContext.Current.CancellationToken);
 
         // Assert
         await metricPublisher.Received(1)
@@ -124,7 +124,7 @@ public class MetricsIngestionServiceTests
             .ThrowsAsync(new HttpRequestException("upstream down"));
 
         // Act & Assert
-        await Assert.ThrowsAsync<HttpRequestException>(() => sut.IngestAsync());
+        await Assert.ThrowsAsync<HttpRequestException>(() => sut.IngestAsync(TestContext.Current.CancellationToken));
     }
 
     [Fact]
@@ -135,11 +135,11 @@ public class MetricsIngestionServiceTests
             .ThrowsAsync(new HttpRequestException("upstream down"));
 
         // Act
-        await Assert.ThrowsAsync<HttpRequestException>(() => sut.IngestAsync());
+        await Assert.ThrowsAsync<HttpRequestException>(() => sut.IngestAsync(TestContext.Current.CancellationToken));
 
         // Assert
         await metricPublisher.DidNotReceiveWithAnyArgs()
-            .PublishAsync(default!, default);
+            .PublishAsync(default!, TestContext.Current.CancellationToken);
     }
 
     [Fact]
@@ -152,6 +152,6 @@ public class MetricsIngestionServiceTests
             .ThrowsAsync(new InvalidOperationException("broker unavailable"));
 
         // Act & Assert
-        await Assert.ThrowsAsync<InvalidOperationException>(() => sut.IngestAsync());
+        await Assert.ThrowsAsync<InvalidOperationException>(() => sut.IngestAsync(TestContext.Current.CancellationToken));
     }
 }

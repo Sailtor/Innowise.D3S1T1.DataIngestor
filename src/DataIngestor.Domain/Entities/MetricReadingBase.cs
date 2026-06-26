@@ -1,6 +1,6 @@
-﻿using System.Text.Json.Serialization;
-using DataIngestor.Domain.Entities.Payload;
+﻿using DataIngestor.Domain.Entities.Payload;
 using DataIngestor.Domain.ValueObjects;
+using System.Text.Json.Serialization;
 
 namespace DataIngestor.Domain.Entities;
 

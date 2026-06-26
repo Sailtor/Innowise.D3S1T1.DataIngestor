@@ -1,9 +1,9 @@
-using System.Net.Http.Json;
-using System.Text.Json;
 using DataIngestor.Application.Interfaces;
 using DataIngestor.Domain.Entities;
 using DataIngestor.Infrastructure.Converters;
 using Microsoft.Extensions.Logging;
+using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace DataIngestor.Infrastructure.APIClients;
 

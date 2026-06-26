@@ -10,19 +10,6 @@ namespace DataIngestor.Presentation.Tests.Jobs;
 
 public class MetricReaderJobTests
 {
-    private static IServiceScopeFactory BuildScopeFactory(IMetricsIngestionService ingestionService)
-    {
-        ServiceCollection services = new();
-        services.AddScoped(_ => ingestionService);
-        ServiceProvider sp = services.BuildServiceProvider();
-        return sp.GetRequiredService<IServiceScopeFactory>();
-    }
-
-    private static IJobExecutionContext StubContext()
-    {
-        return Substitute.For<IJobExecutionContext>();
-    }
-
     [Fact]
     public async Task ExecuteWhenIngestionSucceedsCallsIngestExactlyOnce()
     {
@@ -71,5 +58,18 @@ public class MetricReaderJobTests
 
         // Act & Assert
         await sut.Execute(StubContext());
+    }
+
+    private static IServiceScopeFactory BuildScopeFactory(IMetricsIngestionService ingestionService)
+    {
+        ServiceCollection services = new();
+        services.AddScoped(_ => ingestionService);
+        ServiceProvider sp = services.BuildServiceProvider();
+        return sp.GetRequiredService<IServiceScopeFactory>();
+    }
+
+    private static IJobExecutionContext StubContext()
+    {
+        return Substitute.For<IJobExecutionContext>();
     }
 }

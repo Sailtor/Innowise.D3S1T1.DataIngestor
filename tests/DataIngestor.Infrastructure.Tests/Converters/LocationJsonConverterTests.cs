@@ -1,6 +1,6 @@
-using System.Text.Json;
 using DataIngestor.Domain.ValueObjects;
 using DataIngestor.Infrastructure.Converters;
+using System.Text.Json;
 
 namespace DataIngestor.Infrastructure.Tests.Converters;
 

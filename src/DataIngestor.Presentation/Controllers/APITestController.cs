@@ -1,8 +1,8 @@
-using System.Globalization;
 using DataIngestor.Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Polly.CircuitBreaker;
+using System.Globalization;
 
 namespace DataIngestor.Presentation.Controllers;
 

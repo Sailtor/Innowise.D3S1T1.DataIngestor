@@ -1,5 +1,3 @@
-using System.Net;
-using System.Text.Json;
 using DataIngestor.Domain.Entities;
 using DataIngestor.Domain.Entities.Payload;
 using DataIngestor.Domain.ValueObjects;
@@ -8,6 +6,8 @@ using DataIngestor.Infrastructure.Converters;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using RichardSzalay.MockHttp;
+using System.Net;
+using System.Text.Json;
 
 namespace DataIngestor.Infrastructure.Tests.APIClients;
 
