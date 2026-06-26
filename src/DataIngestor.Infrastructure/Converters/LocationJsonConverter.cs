@@ -1,6 +1,6 @@
-﻿using DataIngestor.Domain.ValueObjects;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+using DataIngestor.Domain.ValueObjects;
 
 namespace DataIngestor.Infrastructure.Converters;
 

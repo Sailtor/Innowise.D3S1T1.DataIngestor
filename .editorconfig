@@ -2,6 +2,9 @@ root = true
 
 [*.cs]
 
+# Using directives sorting order
+dotnet_sort_system_directives_first = true
+
 # SA0001 XML comment analysis disabled
 dotnet_diagnostic.SA0001.severity = none
 
