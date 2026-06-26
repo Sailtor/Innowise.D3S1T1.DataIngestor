@@ -3,21 +3,28 @@ using DataIngestor.Domain.Entities;
 using DataIngestor.Domain.Entities.Payload;
 using DataIngestor.Domain.ValueObjects;
 using DataIngestor.Infrastructure.Messaging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace DataIngestor.Infrastructure.Tests.Messaging;
 
 public class MetricReadingProfileTests
 {
-    private readonly IMapper mapper = new MapperConfiguration(
-        cfg => cfg.AddProfile<MetricReadingProfile>())
-        .CreateMapper();
+    private readonly IMapper mapper = CreateMapper();
+
+    private static MapperConfiguration BuildConfiguration()
+    {
+        MapperConfigurationExpression expression = new();
+        expression.AddProfile<MetricReadingProfile>();
+        return new MapperConfiguration(expression, NullLoggerFactory.Instance);
+    }
+
+    private static IMapper CreateMapper() => BuildConfiguration().CreateMapper();
 
     [Fact]
     public void MapperConfigurationIsValid()
     {
         // Act & Assert
-        new MapperConfiguration(cfg => cfg.AddProfile<MetricReadingProfile>())
-            .AssertConfigurationIsValid();
+        BuildConfiguration().AssertConfigurationIsValid();
     }
 
     [Fact]

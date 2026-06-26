@@ -46,9 +46,9 @@ public static class DependencyInjectionRegistration
     private static void AddAppServices(IServiceCollection services)
     {
         services.AddScoped<IMetricPublisher, MetricPublisher>();
-        services.AddAutoMapper(AssemblyReference.Assembly.GetTypes());
+        services.AddAutoMapper(cfg => { }, AssemblyReference.Assembly);
     }
-    
+
     private static void AddScheduledJobs(IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<QuartzOptions>(configuration.GetSection("Quartz"));
