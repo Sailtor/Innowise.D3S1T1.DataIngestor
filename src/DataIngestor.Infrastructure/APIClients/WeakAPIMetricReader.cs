@@ -11,7 +11,7 @@ public class WeakAPIMetricReader(
     HttpClient httpClient,
     ILogger<WeakAPIMetricReader> logger) : IMetricReader
 {
-    private static readonly JsonSerializerOptions jsonOptions = new()
+    private static readonly JsonSerializerOptions JsonOptions = new()
     {
         PropertyNameCaseInsensitive = true,
         Converters = { new LocationJsonConverter() },
@@ -20,7 +20,7 @@ public class WeakAPIMetricReader(
     public async Task<List<MetricReadingBase>> ReadMetricsAsync(CancellationToken cancellationToken = default)
     {
         logger.LogInformation("Metrics fetch started");
-        List<MetricReadingBase>? readings = await httpClient.GetFromJsonAsync<List<MetricReadingBase>>("meters", jsonOptions, cancellationToken);
+        List<MetricReadingBase>? readings = await httpClient.GetFromJsonAsync<List<MetricReadingBase>>("meters", JsonOptions, cancellationToken);
         logger.LogInformation("Metrics fetch finished");
 
         return readings ?? [];
