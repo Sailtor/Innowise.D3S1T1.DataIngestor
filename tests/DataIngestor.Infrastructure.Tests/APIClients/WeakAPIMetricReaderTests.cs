@@ -19,14 +19,6 @@ public class WeakAPIMetricReaderTests
         Converters = { new LocationJsonConverter() },
     };
 
-    private static WeakAPIMetricReader BuildSut(MockHttpMessageHandler mockHttp)
-    {
-        HttpClient client = mockHttp.ToHttpClient();
-        client.BaseAddress = new Uri("https://weak-api.test/");
-
-        return new WeakAPIMetricReader(client, Substitute.For<ILogger<WeakAPIMetricReader>>());
-    }
-
     [Fact]
     public async Task ReadMetricsAsyncReturnsDeserializedReadings()
     {
@@ -42,12 +34,12 @@ public class WeakAPIMetricReaderTests
 
         string json = JsonSerializer.Serialize(expected, SerializerOptions);
 
-        MockHttpMessageHandler mockHttp = new();
+        using MockHttpMessageHandler mockHttp = new();
         mockHttp.When("https://weak-api.test/meters")
             .Respond("application/json", json);
 
         // Act
-        List<MetricReadingBase> result = await BuildSut(mockHttp).ReadMetricsAsync();
+        List<MetricReadingBase> result = await BuildSut(mockHttp).ReadMetricsAsync(TestContext.Current.CancellationToken);
 
         // Assert
         Assert.Single(result);
@@ -58,12 +50,12 @@ public class WeakAPIMetricReaderTests
     public async Task ReadMetricsAsyncWhenResponseIsEmptyArrayReturnsEmptyList()
     {
         // Arrange
-        MockHttpMessageHandler mockHttp = new();
+        using MockHttpMessageHandler mockHttp = new();
         mockHttp.When("https://weak-api.test/meters")
             .Respond("application/json", "[]");
 
         // Act
-        List<MetricReadingBase> result = await BuildSut(mockHttp).ReadMetricsAsync();
+        List<MetricReadingBase> result = await BuildSut(mockHttp).ReadMetricsAsync(TestContext.Current.CancellationToken);
 
         // Assert
         Assert.Empty(result);
@@ -73,12 +65,12 @@ public class WeakAPIMetricReaderTests
     public async Task ReadMetricsAsyncWhenResponseIsNullReturnsEmptyList()
     {
         // Arrange
-        MockHttpMessageHandler mockHttp = new();
+        using MockHttpMessageHandler mockHttp = new();
         mockHttp.When("https://weak-api.test/meters")
             .Respond("application/json", "null");
 
         // Act
-        List<MetricReadingBase> result = await BuildSut(mockHttp).ReadMetricsAsync();
+        List<MetricReadingBase> result = await BuildSut(mockHttp).ReadMetricsAsync(TestContext.Current.CancellationToken);
 
         // Assert
         Assert.Empty(result);
@@ -96,12 +88,12 @@ public class WeakAPIMetricReaderTests
             ]
             """;
 
-        MockHttpMessageHandler mockHttp = new();
+        using MockHttpMessageHandler mockHttp = new();
         mockHttp.When("https://weak-api.test/meters")
             .Respond("application/json", json);
 
         // Act
-        List<MetricReadingBase> result = await BuildSut(mockHttp).ReadMetricsAsync();
+        List<MetricReadingBase> result = await BuildSut(mockHttp).ReadMetricsAsync(TestContext.Current.CancellationToken);
 
         // Assert
         Assert.Equal(2, result.Count);
@@ -113,27 +105,35 @@ public class WeakAPIMetricReaderTests
     public async Task ReadMetricsAsyncWhenHttpFailsThrowsHttpRequestException()
     {
         // Arrange
-        MockHttpMessageHandler mockHttp = new();
+        using MockHttpMessageHandler mockHttp = new();
         mockHttp.When("https://weak-api.test/meters")
             .Respond(HttpStatusCode.InternalServerError);
 
         // Act & Assert
-        await Assert.ThrowsAsync<HttpRequestException>(() => BuildSut(mockHttp).ReadMetricsAsync());
+        await Assert.ThrowsAsync<HttpRequestException>(() => BuildSut(mockHttp).ReadMetricsAsync(TestContext.Current.CancellationToken));
     }
 
     [Fact]
     public async Task ReadMetricsAsyncHonoursCancellationToken()
     {
         // Arrange
-        MockHttpMessageHandler mockHttp = new();
+        using MockHttpMessageHandler mockHttp = new();
         mockHttp.When("https://weak-api.test/meters")
             .Respond("application/json", "[]");
 
         using CancellationTokenSource cts = new();
-        cts.Cancel();
+        await cts.CancelAsync();
 
         // Act & Assert
         await Assert.ThrowsAnyAsync<OperationCanceledException>(
             () => BuildSut(mockHttp).ReadMetricsAsync(cts.Token));
+    }
+
+    private static WeakAPIMetricReader BuildSut(MockHttpMessageHandler mockHttp)
+    {
+        HttpClient client = mockHttp.ToHttpClient();
+        client.BaseAddress = new Uri("https://weak-api.test/");
+
+        return new WeakAPIMetricReader(client, Substitute.For<ILogger<WeakAPIMetricReader>>());
     }
 }

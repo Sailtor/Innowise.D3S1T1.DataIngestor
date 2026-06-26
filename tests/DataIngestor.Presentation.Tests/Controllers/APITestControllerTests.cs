@@ -66,7 +66,7 @@ public class APITestControllerTests
         ObjectResult problem = Assert.IsType<ObjectResult>(result);
         Assert.Equal(StatusCodes.Status503ServiceUnavailable, problem.StatusCode);
 
-        string? retryAfterHeader = sut.HttpContext.Response.Headers["Retry-After"].FirstOrDefault();
+        string? retryAfterHeader = sut.HttpContext.Response.Headers.RetryAfter.FirstOrDefault();
         Assert.Equal("30", retryAfterHeader);
     }
 

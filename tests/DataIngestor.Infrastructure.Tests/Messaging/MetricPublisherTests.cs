@@ -13,14 +13,6 @@ public class MetricPublisherTests
 {
     private readonly IPublishEndpoint publishEndpoint = Substitute.For<IPublishEndpoint>();
     private readonly IMapper mapper = CreateMapper();
-
-    private static IMapper CreateMapper()
-    {
-        MapperConfigurationExpression expression = new();
-        expression.AddProfile<MetricReadingProfile>();
-        return new MapperConfiguration(expression, NullLoggerFactory.Instance).CreateMapper();
-    }
-
     private readonly MetricPublisher sut;
 
     public MetricPublisherTests()
@@ -42,7 +34,7 @@ public class MetricPublisherTests
         ];
 
         // Act
-        await sut.PublishAsync(readings);
+        await sut.PublishAsync(readings, TestContext.Current.CancellationToken);
 
         // Assert
         await publishEndpoint.Received(1)
@@ -68,7 +60,7 @@ public class MetricPublisherTests
         ];
 
         // Act
-        await sut.PublishAsync(readings);
+        await sut.PublishAsync(readings, TestContext.Current.CancellationToken);
 
         // Assert
         await publishEndpoint.Received(1)
@@ -93,7 +85,7 @@ public class MetricPublisherTests
         DateTime before = DateTime.UtcNow;
 
         // Act
-        await sut.PublishAsync(readings);
+        await sut.PublishAsync(readings, TestContext.Current.CancellationToken);
 
         DateTime after = DateTime.UtcNow;
 
@@ -130,12 +122,19 @@ public class MetricPublisherTests
     public async Task PublishAsyncWhenEmptyReadingsPublishesEmptyBatch()
     {
         // Act
-        await sut.PublishAsync([]);
+        await sut.PublishAsync([], TestContext.Current.CancellationToken);
 
         // Assert
         await publishEndpoint.Received(1)
             .Publish(
                 Arg.Is<Contracts.MetricReadingsBatch>(b => b.Readings.Count == 0),
                 Arg.Any<CancellationToken>());
+    }
+
+    private static IMapper CreateMapper()
+    {
+        MapperConfigurationExpression expression = new();
+        expression.AddProfile<MetricReadingProfile>();
+        return new MapperConfiguration(expression, NullLoggerFactory.Instance).CreateMapper();
     }
 }

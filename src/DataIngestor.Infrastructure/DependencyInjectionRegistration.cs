@@ -34,7 +34,7 @@ public static class DependencyInjectionRegistration
                 .GetRequiredService<IOptions<WeakApiOptions>>()
                 .Value;
 
-            client.BaseAddress = new Uri(options.Url);
+            client.BaseAddress = options.Url;
             client.DefaultRequestHeaders.Add("X-Api-Key", options.ApiKey);
         }).AddStandardResilienceHandler();
 

@@ -11,15 +11,6 @@ public class MetricReadingProfileTests
 {
     private readonly IMapper mapper = CreateMapper();
 
-    private static MapperConfiguration BuildConfiguration()
-    {
-        MapperConfigurationExpression expression = new();
-        expression.AddProfile<MetricReadingProfile>();
-        return new MapperConfiguration(expression, NullLoggerFactory.Instance);
-    }
-
-    private static IMapper CreateMapper() => BuildConfiguration().CreateMapper();
-
     [Fact]
     public void MapperConfigurationIsValid()
     {
@@ -121,5 +112,14 @@ public class MetricReadingProfileTests
         Assert.Equal(2, messages.Count);
         Assert.IsType<Contracts.EnergyReadingPayload>(messages[0].Payload);
         Assert.IsType<Contracts.MotionReadingPayload>(messages[1].Payload);
+    }
+
+    private static IMapper CreateMapper() => BuildConfiguration().CreateMapper();
+
+    private static MapperConfiguration BuildConfiguration()
+    {
+        MapperConfigurationExpression expression = new();
+        expression.AddProfile<MetricReadingProfile>();
+        return new MapperConfiguration(expression, NullLoggerFactory.Instance);
     }
 }
