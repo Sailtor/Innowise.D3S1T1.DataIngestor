@@ -46,3 +46,29 @@ jobs:
           file: ./src/DataIngestor.AppHost/Dockerfile
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+
+  publish-contracts-nuget:
+    needs: codestyle-check
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Pack
+        run: >
+          dotnet pack
+          ./src/DataIngestor.Contracts/DataIngestor.Contracts.csproj
+          --configuration Release
+          /p:Version=1.0.${{ github.run_number }}
+          --output ./nupkg
+      - name: Push to GitHub Packages
+        run: >
+          dotnet nuget push ./nupkg/*.nupkg
+          --source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
+          --api-key ${{ secrets.GITHUB_TOKEN }}
+          --skip-duplicate

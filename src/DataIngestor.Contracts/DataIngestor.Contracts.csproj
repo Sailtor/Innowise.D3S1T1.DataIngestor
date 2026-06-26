@@ -4,6 +4,12 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <IsPackable>true</IsPackable>
+    <PackageId>Innowise.D3S1T1.DataIngestor.Contracts</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Innowise</Authors>
+    <Description>Shared contracts for the DataIngestor service.</Description>
+    <RepositoryUrl>https://github.com/Sailtor/Innowise.D3S1T1.DataIngestor</RepositoryUrl>
   </PropertyGroup>
 
 </Project>
