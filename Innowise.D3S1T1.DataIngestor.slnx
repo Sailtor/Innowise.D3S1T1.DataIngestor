@@ -1,7 +1,13 @@
 <Solution>
-  <Folder Name="/src/">
+  <Folder Name="/Solution Items/">
+    <File Path=".dockerignore" />
     <File Path=".editorconfig" />
+    <File Path=".gitignore" />
     <File Path="Directory.Build.props" />
+    <File Path="LICENSE.txt" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/src/">
     <Project Path="src/DataIngestor.AppHost/DataIngestor.AppHost.csproj" />
     <Project Path="src/DataIngestor.Application/DataIngestor.Application.csproj" />
     <Project Path="src/DataIngestor.Contracts/DataIngestor.Contracts.csproj" Id="28db426c-36eb-4ef3-85bb-a653ba2a8e0e" />
